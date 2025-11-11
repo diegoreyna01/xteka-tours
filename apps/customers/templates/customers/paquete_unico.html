@@ -1,0 +1,198 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/customers/paquete_unico.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="paquete-detalle-container">
+  <div class="slider-container">
+    <div class="slider">
+      {% for imagen in paquete.imagenpaquete_set.all %}
+        <div class="slide">
+          <img src="{{ imagen.url_imagen }}" alt="Imagen del paquete">
+        </div>
+      {% endfor %}
+    </div>
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+  </div>
+
+  <div class="paquete-header">
+    <div class="paquete-titulo-box">
+      <h1 class="paquete-nombre">
+        {{ paquete.nombre }}
+      </h1>
+    </div>
+
+    <div class="paquete-info-grid">
+        <div class="info-box blue">
+            <div>
+                ${{ paquete.precio_adulto }}
+            </div>
+            <div>
+                P/ Persona
+            </div>
+        </div>
+        <div class="info-box blue">
+            <div>
+                {{ paquete.minimo_personas }}-{{ paquete.maximo_personas }}
+            </div>
+            <div>
+                Max Personas
+            </div>
+        </div>
+        <div class="info-box blue">
+            <div>
+                {{ paquete.duracion_dias }}
+            </div>
+            <div>
+                Días
+            </div>
+        </div>
+        <div class="info-box green">
+            <div id="btn-reservar" style="cursor: pointer;padding: 0.75rem !important;">
+                <button href="#" class="reservar-btn">
+                    <img src="{% static 'icons/calendar.svg'%}" alt="">
+                </button>
+            </div>
+            <div>
+                Reservar
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active">
+      <img src="{% static 'icons/description.svg' %}" alt="">
+      <p>Descripción</p>
+    </button>
+    <button class="tab">
+      <img src="{% static 'icons/itinerario.svg' %}" alt="">
+      <p>Itinerario</p>
+    </button>
+    <button class="tab">
+      <img src="{% static 'icons/book.svg' %}" alt="">
+      <p>¿Qué incluye?</p>
+    </button>
+    <button class="tab">
+      <img src="{% static 'icons/faqs.svg' %}" alt="">
+      <p>FAQs</p>
+    </button>
+    <button class="tab">
+      <img src="{% static 'icons/location.svg' %}" alt="">
+      <p>Ubicaciones</p>
+    </button>
+  </div>
+
+  <div class="tab-content-boxes">
+    <div class="tab-content active">
+      <h2>Descripción</h2>
+      <p>{{ paquete.descripcion|linebreaks }}</p>
+    </div>
+
+    <div class="tab-content">
+      <div class="itinerario-header">
+        <h2>Itinerario</h2>
+        <label class="toggle-container">
+          Expandir
+          <input type="checkbox" class="grupo-toggle" data-group="itinerario">
+        </label>
+      </div>
+    
+      <div class="itinerario-linea" data-group="itinerario">
+        {% for item in itinerarios %}
+          <div class="itinerario-dia">
+            <div class="punto-dia">
+              <div class="icono-dia">
+                <img src="{% static 'icons/itinerario_location.png' %}" alt="">
+              </div>
+            </div>
+            <div class="contenido-dia">
+              <div class="titulo-dia">
+                <strong>Día {{ item.dia }}: {{ item.titulo }}</strong>
+                <button class="boton-colapsar" data-group="itinerario">&#8855;</button>
+              </div>
+              <div class="detalle-dia" data-group="itinerario">
+                {{ item.descripcion|linebreaks }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+
+    <div class="tab-content">
+      <h2>¿Qué incluye?</h2>
+      <ul>
+        {% for amenidad in amenidades %}
+          <li>{{ amenidad.nombre }}</li>
+        {% empty %}
+          <li>No hay amenidades disponibles para este paquete.</li>
+        {% endfor %}
+      </ul>
+      <h2>Actividades</h2>
+      <div class="xteka-card-grid">
+        {% for actividad in actividades %}    
+          <div class="xteka-card-item">
+            <img src="{{ actividad.url_portada }}" alt="Imagen de {{ actividad.nombre }}">
+            <div class="xteka-card-text">{{ actividad.nombre }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="itinerario-header">
+        <h2>FAQs</h2>
+        <label class="toggle-container">
+          Expandir
+          <input type="checkbox" class="grupo-toggle" data-group="faq">
+        </label>
+      </div>
+    
+      <div class="xteka-faq-list" data-group="faq">
+        {% for faq in faqs %}
+          <div class="xteka-faq-item">
+            <button class="xteka-faq-question boton-colapsar" data-group="faq">
+              {{ faq.pregunta }}
+              <span class="arrow">&#9662;</span>
+            </button>
+            <div class="xteka-faq-answer detalle-dia" data-group="faq">
+              <p>{{ faq.respuesta }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+
+    <div class="tab-content">
+      <h2>Ubicaciones</h2>
+      <p>Tu paquete incluye acceso a las siguientes ubicaciones destacadas:</p>
+      <div class="xteka-card-grid">
+        {% for ubicacion in ubicaciones %} 
+          <div class="xteka-card-item">
+            <img src="{{ ubicacion.url_portada }}" alt="Imagen de {{ ubicacion.nombre }}">
+            <div class="xteka-card-text">{{ ubicacion.nombre }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <p>A continuación, te mostramos un mapa de referencia para que puedas ubicarlas fácilmente:</p>      
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d472002.3568233719!2d-99.70485016493784!3d22.447145047423785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x867f51ec0dedccaf%3A0x36d445ce8585a00b!2sEl%20Naranjo%2C%20S.L.P.!5e0!3m2!1ses-419!2smx!4v1746407939512!5m2!1ses-419!2smx" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+  
+</div>
+
+{% include "customers/components/modal_reservacion.html" %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/customers/paquete_unico.js' %}"></script>
+<script src="{% static 'js/customers/slider.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'customers/base.html' %} 
+{% load static %} 
+{% block title %}Contacto - xtekamx{% endblock %} 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/customers/contact.css' %}?v=2" />
+{% endblock %}
+{% block content %}
+
+{% include "customers/components/breadcrumb.html" with titulo="CONTACTO" breadcrumb="Inicio > Contacto" imagen="https://res.cloudinary.com/dtzil5dwl/image/upload/v1746509938/contacto-breadcrumb_nfplkr.jpg" %}
+
+<div id="contact-container">
+    <div id="div-form-contact" class="fade-in-on-scroll">
+        <p>CONTÁCTANOS Y COMPARTE ESTA EXPERIENCIA CON NOSOTROS</p>
+        <form id="forms-contact">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Nombre:</label>
+                <input type="text" name="name" id="name">
+            </div>
+        
+            <div class="form-group">
+                <label for="last-name">Apellido(s):</label>
+                <input type="text" name="last_name" id="last_name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Telefono:</label>
+                <input type="tel" name="telefono" id="telefono">
+            </div>
+        
+            <div class="form-group">
+                <label for="email">Correo electrónico:</label>
+                <input type="text" name="email" id="email">
+            </div>
+        
+            <div class="form-group full-width">
+                <label for="comments">Comentarios:</label>
+                <textarea name="mensaje" id="mensaje"></textarea>
+            </div>
+            <button type="submit" id="submit-btn" style="position: relative;">
+                <span id="submit-text">Enviar</span>
+                <span id="spinner" class="spinner" style="display: none;"></span>
+            </button>                        
+        </form>        
+    </div>
+
+    {% include "customers/components/header_lined.html" with text="O" color="black" %}
+
+    <div id="div-prenotare" class="fade-in-on-scroll">
+        <img src="{% static 'img/customers/contacto/contact-prenotare.png' %}" alt="Imagen de reservación">
+        <div id="preonatare-text">
+            <p>RESERVA TU <span class="gradient-xteka">PAQUETE</span> CON NOSOTROS</p>
+            <p><b>NOTA:</b> NOS RESERVAMOS EL DERECHO DE DISPONIBILIDAD PARA UN MÍNIMO DE 2 PERSONAS O MÁS EN TODOS NUESTROS PAQUETES.</p>
+            <a href="{% url 'paquetes' %}">Ver mas</a>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/customers/contact.js' %}"></script>
+{% endblock %}

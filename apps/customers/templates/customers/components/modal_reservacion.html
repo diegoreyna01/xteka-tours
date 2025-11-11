@@ -1,0 +1,86 @@
+{% load static %}
+<!-- Modal Reservacion (templates/customers/components/modal_reservacion.html) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+<link rel="stylesheet" href="{% static 'css/customers/modal_reservacion.css' %}">
+
+<div id="modalReservacion" class="modal-reserva hidden">
+  <div class="modal-reserva-content">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <div class="modal-header">
+      <h2>Reservar Paquete: {{ paquete.nombre }}</h2>
+      <p>Duración: {{ paquete.duracion_dias }} días</p>
+    </div>
+    <p style="text-align: justify;"><b>Nota:</b> Si reservaste anteriormente, utiliza el correo y número de teléfono que usaste por última vez, así podremos recordarte.</p>
+    <form method="POST" id="formReservacion" action="javascript:void(0);" data-url="{% url 'guardar_reservacion_ajax' %}">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre">
+      </div>
+
+      <div class="input-group">
+        <label for="apellido">Apellido:</label>
+        <input type="text" name="apellido">
+      </div>
+
+      <div class="input-group">
+        <label for="email">Correo electrónico:</label>
+        <input type="text" name="email">
+      </div>
+
+      <div class="input-group">
+        <label for="telefono">Teléfono:</label>
+        <input type="text" name="telefono">
+      </div>
+
+      <div class="input-group">
+        <label for="fecha_inicio">Selecciona una fecha de inicio:</label>
+        <input type="text" name="fecha_inicio" id="fecha_inicio" data-duracion="{{ paquete.duracion_dias }}">
+      </div>
+
+      <div class="input-group">
+        <label for="cantidad_adultos">Adultos:</label>
+        <input type="number" name="cantidad_adultos" min="1">
+      </div>
+
+      <div class="input-group">
+        <label for="cantidad_ninos">Niños:</label>
+        <input type="number" name="cantidad_ninos" min="0">
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="submit-btn" style="position: relative;">
+          <span id="submit-text">Confirmar Reservación</span>
+          <span id="spinner" class="spinner" style="display: none;"></span>
+      </button> 
+      <input type="hidden" name="paquete_id" value="{{ paquete.id }}">
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-reserva hidden">
+  <div class="modal-reserva-content" style="max-width: 400px;">
+    <div class="modal-header">
+      <h2>¿Usar datos anteriores?</h2>
+      <p>Este correo ya está registrado. ¿Deseas usar la información previamente guardada?</p>
+    </div>
+    <div class="actions" style="display: flex; justify-content: center; gap: 1rem;">
+      <button id="btnConfirmarUso" style="background-color: #00b894;">Sí, usar datos</button>
+      <button id="btnCancelarUso" class="cancel">No</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+{{ fechas_bloqueadas|json_script:"rango-reservas" }}
+
+<script>
+  const URL_RESERVACION = "{% url 'guardar_reservacion_ajax' %}";
+  const PAQUETE_ID = "{{ paquete.id }}"
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{% static 'js/customers/modal_reservacion.js' %}"></script>

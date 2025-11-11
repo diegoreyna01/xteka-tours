@@ -1,0 +1,58 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}Admin - xtekamx{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/index.css' %}?v=3" />
+<style>
+    .chart-placeholder {
+        min-height: 300px;
+    }
+    body {
+        margin: 80px 0px 0px 0px !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main class="dashboard">
+  
+    <section class="top-cards">
+        <div class="card balance">
+            <h3>Ingreso total aprobado</h3>
+            <p>${{ ingreso_total }}</p> 
+        </div>
+        <div class="card ingresos">
+            <h3>Ingresos (Últimos 7 días)</h3>
+            <div class="chart-placeholder">
+                <canvas id="ingresosChart"></canvas> 
+            </div>
+        </div>
+    </section>
+  
+    <section class="sales-summary">
+        <div class="sales-chart">
+            <h3>Total de reservas (Últimos 7 días)</h3>
+            <div class="chart-placeholder">
+                <canvas id="ventasChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="sales-stats">
+            <div class="stat-card ventas">Reservas Totales<br><strong>{{ total_reservas }}</strong></div>
+            <div class="stat-card entradas">Aprobadas<br><strong>{{ aprobadas }}</strong></div>
+            <div class="stat-card pendientes">En espera<br><strong>{{ en_espera }}</strong></div>
+            <div class="stat-card salidas">Canceladas<br><strong>{{ canceladas }}</strong></div>
+        </div>
+    </section>
+</main>
+
+{{ fechas|json_script:"fechas-data" }}
+{{ ingresos_por_dia|json_script:"ingresos-data" }}
+{{ ventas_por_dia|json_script:"ventas-data" }}
+
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/admin/dashboard.js' %}"></script>
+{% endblock %}
